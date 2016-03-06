@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>放大镜</title>
+<style>
+body{background-color:#666}
+* { margin:0; padding:0; }
+#div1, #div2 { overflow:hidden; position:relative; float:left; margin:50px; width:310px; height:310px; }
+#div1 { background:url(file:///F|/%E6%99%BA%E8%83%BD%E7%A4%BE/%E8%AF%BE%E7%A8%8B/js%E8%AF%BE%E7%A8%8B/2015.11.06-%E8%80%81%E5%B8%88/code/images/m1.jpg) no-repeat; }
+#div2 { display:none; }
+span { display:none; position:absolute; top:0; left:0; width:100px; height:100px; background:yellow; opacity:0.3; }
+img { position:absolute; top:0; left:0; }
+</style>
+<script>
+window.onload=function (){
+	var oDiv1=document.getElementById('div1');
+	var oDiv2=document.getElementById('div2');
+	var oImg=document.getElementById('img1');
+	var oSpan=document.getElementById('span1');
+	
+	var maxLeft=0;
+	var maxTop=0;
+	var maxImgLeft=0;
+	var maxImgTop=0;
+	
+	oDiv1.onmouseover=function (){
+		oSpan.style.display='block';
+		oDiv2.style.display='block';
+		
+		maxLeft=oDiv1.offsetWidth-oSpan.offsetWidth;
+		maxTop=oDiv1.offsetHeight-oSpan.offsetHeight;
+		maxImgLeft=oImg.offsetWidth-oDiv2.offsetWidth;
+		maxImgTop=oImg.offsetHeight-oDiv2.offsetHeight;
+	};
+	
+	oDiv1.onmouseout=function (){
+		oSpan.style.display='none';
+		oDiv2.style.display='none';
+	};
+	
+	// 移动
+	oDiv1.onmousemove=function (ev){
+		var oEvent=ev || event;
+		var left=oEvent.clientX-oDiv1.offsetLeft-oSpan.offsetWidth/2;
+		var top=oEvent.clientY-oDiv1.offsetTop-oSpan.offsetHeight/2;
+	
+		// 限制
+		if (left < 0)
+		{
+			left=0;
+		}
+		else if (left > maxLeft)
+		{
+			left=maxLeft;
+		}
+		
+		if (top < 0)
+		{
+			top=0;
+		}
+		else if (top > maxTop)
+		{
+			top=maxTop;
+		}
+		
+		oSpan.style.left=left+'px';
+		oSpan.style.top=top+'px';
+		
+		// 算比例
+		oImg.style.left=-left/maxLeft*maxImgLeft+'px';
+		oImg.style.top=-top/maxTop*maxImgTop+'px';
+	};
+};
+</script>
+</head>
+
+<body>
+	<div id="div1">
+		<span id="span1"></span>
+	</div>
+	<div id="div2">
+		<img src="file:///F|/智能社/课程/js课程/2015.11.06-老师/code/images/b1.jpg" id="img1" />
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
