@@ -1,0 +1,91 @@
+* {
+	margin: 0px; 
+	padding: 0px;
+	box-sizing: border-box;
+	 -webkit-box-sizing: border-box; 
+	 -moz-box-sizing: border-box;
+}
+
+#breadcrumb {
+	list-style: none; display: inline-block;
+}
+#breadcrumb .icon {
+	font-size: 14px;
+}
+#breadcrumb li {
+	float: left;
+}
+#breadcrumb li a {
+	background: rgb(52, 152, 219);
+	height: 40px;
+	text-align: center;
+	color: rgb(255, 255, 255);
+	line-height: 40px;
+	text-decoration: none;
+	display: block;
+	position: relative;
+	width: 124px;
+	padding-top: 0px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 5px;
+	margin-right: 12px;
+	margin-left: 12px;
+}
+#breadcrumb li:nth-child(2n) a {
+	background-color: rgb(41, 128, 185);
+}
+#breadcrumb li:nth-child(2n) a::before {
+	border-color: rgb(41, 128, 185) rgb(41, 128, 185) rgb(41, 128, 185) transparent;
+}
+#breadcrumb li:nth-child(2n) a::after {
+	border-left-color: rgb(41, 128, 185);
+}
+#breadcrumb li:first-child a {
+	border-radius: 4px 0px 0px 4px; padding-left: 15px; -webkit-border-radius: 4px 0 0 4px; -moz-border-radius: 4px 0 0 4px; -ms-border-radius: 4px 0 0 4px; -o-border-radius: 4px 0 0 4px;
+}
+#breadcrumb li:first-child a::before {
+	border: currentColor;
+}
+#breadcrumb li:last-child a {
+	border-radius: 0px 4px 4px 0px;
+	padding-right: 15px;
+	-webkit-border-radius: 0 4px 4px 0;
+	-moz-border-radius: 0 4px 4px 0;
+	-ms-border-radius: 0 4px 4px 0;
+	-o-border-radius: 0 4px 4px 0;
+	
+}
+#breadcrumb li:last-child a::after {
+	border: currentColor;
+}
+#breadcrumb li a::before {
+	border-width: 20px 10px; border-style: solid; border-color: rgb(52, 152, 219); top: 0px; width: 0px; height: 0px; position: absolute; content: "";
+}
+#breadcrumb li a::after {
+	border-width: 20px 10px; border-style: solid; border-color: rgb(52, 152, 219); top: 0px; width: 0px; height: 0px; position: absolute; content: "";
+}
+#breadcrumb li a::before {
+	left: -20px; border-left-color: transparent;
+}
+#breadcrumb li a::after {
+	border-color: transparent transparent transparent rgb(52, 152, 219); left: 100%;
+}
+#breadcrumb li a:hover {
+	background-color: rgb(26, 188, 156);
+}
+#breadcrumb li a:hover::before {
+	border-color: rgb(26, 188, 156) rgb(26, 188, 156) rgb(26, 188, 156) transparent;
+}
+#breadcrumb li a:hover::after {
+	border-left-color: rgb(26, 188, 156);
+}
+#breadcrumb li a:active {
+	background-color: rgb(22, 160, 133);
+}
+#breadcrumb li a:active::before {
+	border-color: rgb(22, 160, 133) rgb(22, 160, 133) rgb(22, 160, 133) transparent;
+}
+#breadcrumb li a:active::after {
+	border-left-color: rgb(22, 160, 133);
+}
