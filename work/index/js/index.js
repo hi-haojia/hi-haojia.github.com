@@ -1,431 +1,180 @@
 // JavaScript Document
 ready(function(){
-	function json2url(json){
-		var arr=[];
-		for(var name in json){
-			arr.push(name+'='+json[name]);
-		}
-		return arr.join('&');
-	}
-	function jsonp(json){
-		json=json || {};
-		if(!json.url)return;
-		json.data=json.data || {};
-		json.cbName=json.cbName || 'cb';
-		
-		
-		var fnName='jsonp'+Math.random();
-		fnName=fnName.replace('.','');
-		
-		window[fnName]=function(data){
-			json.success && json.success(data);	
-			oHead.removeChild(oS);
-		}
-		
-		json.data[json.cbName]=fnName;
-		
-		var oS=document.createElement('script');	
-		oS.src=json.url+'?'+json2url(json.data);
-		var oHead=document.getElementsByTagName('head')[0];
-		oHead.appendChild(oS);	
-	}
-	var oNews=document.getElementById('news');
-	//新闻
-	ajax({url:'http://api.1-blog.com/biz/bizserver/news/list.do',
-		success:function(json){
-			var json=eval('('+json+')');
-			var arr=json.detail;
-			var n=0;
-			oNews.innerHTML='今日热点 : <a href="'+arr[n].article_url+'" target="_blank" title="'+arr[n].title+'">'+arr[n].title+'</a>';
-			var timer=setInterval(function(){
-				n++;
-				if(n==arr.length)
-				{
-					n=0;
-				}
-				oNews.innerHTML='今日热点 : <a href="'+arr[n].article_url+'" target="_blank" title="'+arr[n].title+'">'+arr[n].title+'</a>';
-			},1000);
-		}
-	});
-	//天气
-	var oWeather_s=document.getElementById('weather_s');
-	var oWeather_b=document.getElementById('weather_b');
-	var oWeather=document.getElementsByClassName('weather')[0];
-	oWeather.onmouseover=function(){
-		oWeather.style.background='#E5AEE5';
-		oWeather_b.style.display='block';
-	}
-	oWeather.onmouseout=function(){
-		oWeather.style.background='';
-		oWeather_b.style.display='none';
-	}
-	jsonp({url:'http://api.k780.com:88/',data:{
-		app:'weather.today',
-		appkey:10003,
-		sign:'b59bc3ef6191eb9f747dd4e83c99f2a4',
-		format:'json',
-		weaid:'北京'
-		},
-		cbName:'jsoncallback',
-		success:function(json){
-			json=json.result;
-			//图片
-			jsonp({url:'http://api.k780.com:88/',data:{
-					typeid:1,
-					app:'code.hanzi_pinyin',
-					appkey:10003,
-					sign:'b59bc3ef6191eb9f747dd4e83c99f2a4',
-					format:'json',
-					wd:json.weather
-				},
-				cbName:'jsoncallback',
-				success:function(json){
-					
-					var weather=json.result.ret.split(' ')[0];
-					var h=new Date().getHours();
-					if(h>7 && h<20)
-					{
-						var img_s_url='http://php.weather.sina.com.cn/images/yb3/78_78/'+weather+'_0.png';
-						var img_b_url='http://php.weather.sina.com.cn/images/yb3/180_180/'+weather+'_0.png'
-					}
-					else
-					{
-						var img_s_url='http://php.weather.sina.com.cn/images/yb3/78_78/'+weather+'_1.png';
-						var img_b_url='http://php.weather.sina.com.cn/images/yb3/180_180/'+weather+'_1.png'
-					}
-					oWeather_s.style.background='url('+img_s_url+') no-repeat';
-					oWeather_s.style.backgroundSize='auto 130%';
-					oWeather_b.style.backgroundImage='url('+img_b_url+')';
-				}
-			});
-			if(json.temp_high<json.temp_curr)
-			{
-				json.temp_high=json.temp_curr;
-			}
-			oWeather_b.innerHTML='<li>'+json.temp_curr+'℃</li><li>'+json.citynm+'</li><li>'+json.weather+' '+json.wind+' '+json.winp+'</li><li>'+json.temp_low+'℃/'+json.temp_high+'℃</li><li>'+json.days+' '+json.week+'</li>';
-			
-		
-		}
-	});
 	
+	/*全屏滚动*/
 	$('#section_wrap').fullpage({
 		anchors:['1', '2', '3','4','5','footer'],
 		'navigation': true,
 		'resize':false,
 		'verticalCentered':false,
 	});
-	/*
-	for(var i=0;i<aPhoto.length;i++){
-		aPhoto[i].onmouseover = function(){
-			clearInterval(timer);
-			var oImg = this.getElementsByTagName('img')[0];
-			oImg.style.width = '480px';
-			
-		}
-		aPhoto[i].onmouseout = function() {
-			move();
-			var oImg = this.getElementsByTagName('img')[0];
-			oImg.style.width = '90px';
-		}
-		
-	}
-	*/	
 	
-	
+	/*动态效果控制*/
 	;(function(){
-		var oUl=document.getElementById('products_con').children[0];
-		var oBtn=document.getElementById('btn');
-		var aLi=oUl.children;
-		var w=aLi[0].offsetWidth;
-		var h=aLi[0].offsetHeight;
-		var zIndex=1;
-		var aPos=[];
-		for(var i=0;i<aLi.length;i++){
-			aPos.push({left:aLi[i].offsetLeft,top:aLi[i].offsetTop});
-			aLi[i].index=i;
-			enter(aLi[i]);
-			leave(aLi[i]);			
-		}
-		//布局转换
-		for(var i=0;i<aLi.length;i++){
-			aLi[i].style.left=aPos[i].left+'px';
-			aLi[i].style.top=aPos[i].top+'px';
-			aLi[i].style.position='absolute';
-			aLi[i].style.margin=0;	
-		}
-		oBtn.onmousedown=function(){
-			return false;	
-		};
-		oBtn.onclick=function(){
-			aPos.sort(function(){
-				return Math.random()-0.5;	
-			});	
-			for(var i=0;i<aLi.length;i++){
-				move(aLi[i],aPos[aLi[i].index]);	
-			}
-		};
-		function enter(obj){
-			obj.onmouseover=function(ev){
-				var oEvent=ev||event;
-				var oSpan=obj.getElementsByTagName('span')[0];
-				var oFrom=oEvent.fromElement||oEvent.relatedTarget;
-				if(obj.contains(oFrom))return;
-				var n=getN(obj,oEvent);
-				switch(n){
-					case 0:
-						oSpan.style.left=w+'px';
-						oSpan.style.top=0;
-						break;
-					case 1:
-						oSpan.style.left=w+'px';
-						oSpan.style.top=h+'px';
-						break;
-					case 2:
-						oSpan.style.left=0;
-						oSpan.style.top=h+'px';
-						break;
-					case 3:
-						oSpan.style.left=-w+'px';
-						oSpan.style.top=h+'px';
-						break;
-					case 4:
-						oSpan.style.left=-w+'px';
-						oSpan.style.top=0;
-						break;
-					case 5:
-						oSpan.style.left=-w+'px';
-						oSpan.style.top=-h+'px';
-						break;
-					case 6:
-						oSpan.style.left=0;
-						oSpan.style.top=-h+'px';
-						break;
-					case 7:
-						oSpan.style.left=w+'px';
-						oSpan.style.top=-h+'px';
-						break;
-						
-							
+		var arr=[true,true,true,true,true];
+		var oH1=document.getElementById('h1');
+		var oPerson_img=document.getElementById('person_img');
+		var oPerson_info=document.getElementById('person_info');
+		var oProducts=document.getElementById('products_con');
+		var aLi=oProducts.getElementsByTagName('li');
+		setInterval(function(){
+			var now=window.location.hash.substring(1);
+			if(now==2)
+			{
+				if(arr[1])
+				{
+					works_drag();
 				}
-				move(oSpan,{left:0,top:0});		
-			};	
-		}
-		function leave(obj){
-			obj.onmouseout=function(ev){
-				var oEvent=ev||event;
-				var oTo=oEvent.toElement||oEvent.relatedTarget;
-				if(obj.contains(oTo))return;
-				var n=getN(obj,oEvent);
-				var oSpan=obj.getElementsByTagName('span')[0];
-				switch(n){
-					case 0:
-						move(oSpan,{left:w,top:0});
-						break;
-					case 1:
-						move(oSpan,{left:w,top:h});
-						break;
-					case 2:
-						move(oSpan,{top:h,left:0});
-						break;
-					case 3:
-						move(oSpan,{left:-w,top:h});
-						break;
-					case 4:
-						move(oSpan,{left:-w,top:0});
-						break;
-					case 5:
-						move(oSpan,{left:-w,top:-h});
-						break;
-					case 6:
-						move(oSpan,{top:-h,left:0});
-						break;
-					case 7:
-						move(oSpan,{left:w,top:-h});
-						break;	
-				}	
-			};	
-		}
-
-		function getN (obj,ev){
-			var y=obj.offsetHeight/2+obj.getBoundingClientRect().top-ev.clientY;
-			var x=obj.offsetWidth/2+obj.getBoundingClientRect().left-ev.clientX;
-			var n=Math.round((Math.atan2(y,x)*180/Math.PI+180)/45)%8;
-			return n;	
-		}
+				arr[1]=false;	
+			}
+			if(now==4)
+			{
+				if(arr[3])
+				{
+					setTimeout(more,500);
+				}
+				arr[3]=false;
+			}
+			if(now==3)
+			{
+				if(arr[2])
+				{
+					three();
+				}
+				arr[2]=false;
+			}
+			/*else
+			{
+				for(var i=0;i<aLi.length;i++)
+				{
+					aLi[i].style.opacity=0;
+				}
+				arr[2]=true;
+			}*/
+			if(now==5)
+			{
+				if(arr[4])
+				{
+					move(oPerson_info,{top:20},{duration:2000,easing:Tween.Elastic.easeOut});
+					move(oPerson_img,{right:20},{duration:2000,easing:Tween.Elastic.easeOut});
+				}
+				arr[4]=false;
+			}else
+			{
+				if(now!='footer')
+				{
+					oPerson_info.style.top='-1000px';
+					oPerson_img.style.right='-1000px';
+					/*move(oPerson_info,{top:-1000},{duration:3000});
+					move(oPerson_img,{right:-1000},{duration:3000});*/
+					arr[4]=true;
+				}
+			}
+			switch(now)
+			{
+				case '1':
+					oH1.innerHTML='holly_zone';
+					break;
+				case '2':
+					oH1.innerHTML='effect';
+					break;
+				case '3':
+					oH1.innerHTML='works';
+					break;
+				case '4':
+					oH1.innerHTML='mobile';
+					break;	
+				case '5':
+					oH1.innerHTML='information';
+			}
+		},100);
 	})();
-		
-		
-	var Row=5;
-	var Col=8;
-	var W=document.documentElement.clientWidth;
-	var H=document.documentElement.clientHeight;
-	var width=W/Col;
-	var height=H/Row;
 	
-	var bgBox=document.getElementById('bgBox');
+	//新闻
+	(function(){
+		var oNews=document.getElementById('news');
+		ajax({url:'http://api.1-blog.com/biz/bizserver/news/list.do',
+			success:function(json){
+				var json=eval('('+json+')');
+				var arr=json.detail;
+				var n=0;
+				oNews.innerHTML='今日热点 : <a href="'+arr[n].article_url+'" target="_blank" title="'+arr[n].title+'">'+arr[n].title+'</a>';
+				var timer=setInterval(function(){
+					n++;
+					if(n==arr.length)
+					{
+						n=0;
+					}
+					oNews.innerHTML='今日热点 : <a href="'+arr[n].article_url+'" target="_blank" title="'+arr[n].title+'">'+arr[n].title+'</a>';
+				},1000);
+			}
+		});
+	})();
 	
-	var aSpan=[];
-	for (var r=0; r<Row; r++)
-	{
-		for (var c=0; c<Col; c++)
-		{
-			var oSpan=document.createElement('span');
-			oSpan.style.position='absolute';
-			oSpan.style.width=width+'px';
-			oSpan.style.height=height+'px';
-			var left=c*width;
-			var top=r*height;
-			
-			oSpan.style.left=left+'px';
-			oSpan.style.top=top+'px';
-			oSpan.style.backgroundSize=('100%*'+Col)+' '+('100%*'+Row);
-			oSpan.style.backgroundPosition='-'+left+'px -'+top+'px';
-			bgBox.appendChild(oSpan);
-			aSpan.push(oSpan);
-		}
-	}
-	var aPath=['#00BFFF','#AB82FF','#FFC1C1','#FF6EB4','#00FA9A'];
-	var oNav=document.getElementById('fp-nav');
 	
-	var e=0;
-	window.o=true;
-	oNav.onclick=function(){
-		if(window.o)
-		{window.o=false;
-			bgNext(e)
-			
+	//天气
+	(function(){
+		var oWeather_s=document.getElementById('weather_s');
+		var oWeather_b=document.getElementById('weather_b');
+		var oWeather=document.getElementsByClassName('weather')[0];
+		oWeather.onmouseover=function(){
+			oWeather.style.background='#E5AEE5';
+			oWeather_b.style.display='block';
 		}
-
-		e++;
-		if(e==aPath.length)
-		{
-			e=0;
+		oWeather.onmouseout=function(){
+			oWeather.style.background='';
+			oWeather_b.style.display='none';
 		}
-	};
-	var aNav=oNav.getElementsByTagName('a');
-	
-	function bgNext(now)
-	{
-		
-		for (var i=0; i<aSpan.length; i++)
-		{
-			aSpan[i].style.opacity=0;
-			aSpan[i].style.background=aPath[now];
-		}
-		var n=0; // 第几个
-		var timer=setInterval(function (){
-			(function (index){
-				move(aSpan[n], {opacity:1}, {
-					duration:300,
-					complete:function (){
-						if (index == aSpan.length-1)
+		jsonp({url:'http://api.k780.com:88/',data:{
+			app:'weather.today',
+			appkey:10003,
+			sign:'b59bc3ef6191eb9f747dd4e83c99f2a4',
+			format:'json',
+			weaid:'北京'
+			},
+			cbName:'jsoncallback',
+			success:function(json){
+				json=json.result;
+				//图片
+				jsonp({url:'http://api.k780.com:88/',data:{
+						typeid:1,
+						app:'code.hanzi_pinyin',
+						appkey:10003,
+						sign:'b59bc3ef6191eb9f747dd4e83c99f2a4',
+						format:'json',
+						wd:json.weather
+					},
+					cbName:'jsoncallback',
+					success:function(json){
+						
+						var weather=json.result.ret.split(' ')[0];
+						var h=new Date().getHours();
+						if(h>7 && h<20)
 						{
-							bgBox.style.background=aPath[now];
+							var img_s_url='http://php.weather.sina.com.cn/images/yb3/78_78/'+weather+'_0.png';
+							var img_b_url='http://php.weather.sina.com.cn/images/yb3/180_180/'+weather+'_0.png'
 						}
+						else
+						{
+							var img_s_url='http://php.weather.sina.com.cn/images/yb3/78_78/'+weather+'_1.png';
+							var img_b_url='http://php.weather.sina.com.cn/images/yb3/180_180/'+weather+'_1.png'
+						}
+						oWeather_s.style.background='url('+img_s_url+') no-repeat';
+						oWeather_s.style.backgroundSize='auto 130%';
+						oWeather_b.style.backgroundImage='url('+img_b_url+')';
 					}
 				});
-			})(n);
-			
-			n++;
-			if (n == aSpan.length)
-			{
-				clearInterval(timer);
-				window.o=true;
+				if(json.temp_high<json.temp_curr)
+				{
+					json.temp_high=json.temp_curr;
+				}
+				oWeather_b.innerHTML='<li>'+json.temp_curr+'℃</li><li>'+json.citynm+'</li><li>'+json.weather+' '+json.wind+' '+json.winp+'</li><li>'+json.temp_low+'℃/'+json.temp_high+'℃</li><li>'+json.days+' '+json.week+'</li>';
 			}
-		}, 30);
-	}	
-	
-	
-	
-	
-	
-	
-		
-		
-		
-			function more()
-			{
-				var oBtn=document.getElementById('Message');
-				var oNumber=document.getElementById('number');
-				var oContact=document.getElementById('contact');
-				
-				var oContent=document.getElementById('content');
-				var aSpan=oContent.children;
-				var R=oContent.offsetWidth/2;
-				var n=360/aSpan.length;
-				var timer=null;
-				move(oContent,{opacity:1},{duration:800,complete:function(){
-						for(var i=0;i<aSpan.length;i++){
-							(function(index){
-								var left=R+R*Math.sin(index*n*Math.PI/180);
-								var top=R-R*Math.cos(index*n*Math.PI/180);
-								move(aSpan[index],{left:left,top:top},{easing:Tween.Elastic.easeInOut,duration:1000,complete:function(){
-									if(index==aSpan.length-1){
-										oContent.a=0;
-										clearInterval(timer);
-										timer=setInterval(function(){
-											oContent.a++;
-											for(var i=0;i<aSpan.length;i++){
-												var left=R+R*Math.sin((i*n+oContent.a)*Math.PI/180);
-												var top=R-R*Math.cos((i*n+oContent.a)*Math.PI/180);
-												aSpan[i].style.left=left+'px';
-												aSpan[i].style.top=top+'px';
-											}	
-										},30);	
-									}	
-								}});	
-							})(i);						
-						}	
-					}});
-					
-					oContent.onmouseover=function(){
-			clearInterval(timer);	
-		};
-		oContent.onmouseout=function(){
-			clearInterval(timer);
-			timer=setInterval(function(){
-				oContent.a++;
-				for(var i=0;i<aSpan.length;i++){
-					var left=R+R*Math.sin((i*n+oContent.a)*Math.PI/180);
-					var top=R-R*Math.cos((i*n+oContent.a)*Math.PI/180);
-					aSpan[i].style.left=left+'px';
-					aSpan[i].style.top=top+'px';
-				}	
-			},30);	
-		};	
-
-			
-		}
-	
-	
-	
-	
-/*自由运动的小球*/
-	;(function(){
-		var oDiv = getByClass(document,'move-boll')[0];
-		var oBoll = oDiv.children[0];	
-		var maxLeft = oDiv.offsetWidth-oBoll.offsetWidth;
-		var maxTop = oDiv.offsetHeight-oBoll.offsetHeight;
-		window.next=function()
-		{
-			var nextLeft = rnd(0,maxLeft);
-			var nextTop = rnd(0,maxTop);
-			var aPos={
-				left:nextLeft,top:nextTop	
-			};	
-			move(oBoll,aPos,{
-				complete:function(){
-					next();
-				},duration:800
-			});
-		}
+		});
 	})();
-		
-	next();
 	
 	
-	
-	/*作品集拖拽*/
+	/*第二屏-作品集拖拽*/
 	function works_drag(){
 		var oWorks = document.getElementById('works');
 		var aLi = oWorks.children;
@@ -462,7 +211,7 @@ ready(function(){
 					top:aPos[n].top,
 					width:150,
 					height:150	
-				});
+				},{duration:1000});
 				n--;
 				if(n==-1)
 				{
@@ -590,34 +339,289 @@ ready(function(){
 	}
 	
 	
-
+	/*第二屏-自由运动的小球*/
+	(function(){
+		var oDiv = getByClass(document,'move-boll')[0];
+		var oBoll = oDiv.children[0];	
+		var maxLeft = oDiv.offsetWidth-oBoll.offsetWidth;
+		var maxTop = oDiv.offsetHeight-oBoll.offsetHeight;
+		window.next=function()
+		{
+			var nextLeft = rnd(0,maxLeft);
+			var nextTop = rnd(0,maxTop);
+			var aPos={
+				left:nextLeft,top:nextTop	
+			};	
+			move(oBoll,aPos,{
+				complete:function(){
+					next();
+				},duration:800
+			});
+		}
+		next();
+	})();
 	
-	;(function(){
-		var arr=[true,true,true,true,true];
-		setInterval(function(){
-			var now=window.location.hash.substring(1);
-			if(now==2)
+		
+	/*第三屏效果-拉钩网效果*/
+	function three(){
+		var oUl=document.getElementById('products_con').children[0];
+		var oBtn=document.getElementById('btn');
+		var aLi=oUl.children;
+		var w=aLi[0].offsetWidth;
+		var h=aLi[0].offsetHeight;
+		var zIndex=1;
+		var aPos=[];
+		for(var i=0;i<aLi.length;i++){
+			aPos.push({left:aLi[i].offsetLeft,top:aLi[i].offsetTop});
+			aLi[i].index=i;
+			enter(aLi[i]);
+			leave(aLi[i]);			
+		}
+		//渐变显示
+		var b=0;
+		var timer=setInterval(function(){
+			move(aLi[b],{opacity:1},{duration:1000});
+			b++;
+			if(b==aLi.length)
 			{
-				if(arr[1])
-				{
-					works_drag();
-				}
-				arr[1]=false;	
+				clearInterval(timer);
 			}
-			if(now==4)
+		},200)
+		//布局转换
+		for(var i=0;i<aLi.length;i++){
+			aLi[i].style.left=aPos[i].left+'px';
+			aLi[i].style.top=aPos[i].top+'px';
+			aLi[i].style.position='absolute';
+			aLi[i].style.margin=0;	
+		}
+		oBtn.onmousedown=function(){
+			return false;	
+		};
+		oBtn.onclick=function(){
+			aPos.sort(function(){
+				return Math.random()-0.5;	
+			});	
+			for(var i=0;i<aLi.length;i++){
+				move(aLi[i],aPos[aLi[i].index]);	
+			}
+		};
+		function enter(obj){
+			obj.onmouseover=function(ev){
+				var oEvent=ev||event;
+				var oSpan=obj.getElementsByTagName('span')[0];
+				var oFrom=oEvent.fromElement||oEvent.relatedTarget;
+				if(obj.contains(oFrom))return;
+				var n=getN(obj,oEvent);
+				switch(n){
+					case 0:
+						oSpan.style.left=w+'px';
+						oSpan.style.top=0;
+						break;
+					case 1:
+						oSpan.style.left=w+'px';
+						oSpan.style.top=h+'px';
+						break;
+					case 2:
+						oSpan.style.left=0;
+						oSpan.style.top=h+'px';
+						break;
+					case 3:
+						oSpan.style.left=-w+'px';
+						oSpan.style.top=h+'px';
+						break;
+					case 4:
+						oSpan.style.left=-w+'px';
+						oSpan.style.top=0;
+						break;
+					case 5:
+						oSpan.style.left=-w+'px';
+						oSpan.style.top=-h+'px';
+						break;
+					case 6:
+						oSpan.style.left=0;
+						oSpan.style.top=-h+'px';
+						break;
+					case 7:
+						oSpan.style.left=w+'px';
+						oSpan.style.top=-h+'px';
+						break;
+						
+							
+				}
+				move(oSpan,{left:0,top:0});		
+			};	
+		}
+		function leave(obj){
+			obj.onmouseout=function(ev){
+				var oEvent=ev||event;
+				var oTo=oEvent.toElement||oEvent.relatedTarget;
+				if(obj.contains(oTo))return;
+				var n=getN(obj,oEvent);
+				var oSpan=obj.getElementsByTagName('span')[0];
+				switch(n){
+					case 0:
+						move(oSpan,{left:w,top:0});
+						break;
+					case 1:
+						move(oSpan,{left:w,top:h});
+						break;
+					case 2:
+						move(oSpan,{top:h,left:0});
+						break;
+					case 3:
+						move(oSpan,{left:-w,top:h});
+						break;
+					case 4:
+						move(oSpan,{left:-w,top:0});
+						break;
+					case 5:
+						move(oSpan,{left:-w,top:-h});
+						break;
+					case 6:
+						move(oSpan,{top:-h,left:0});
+						break;
+					case 7:
+						move(oSpan,{left:w,top:-h});
+						break;	
+				}	
+			};	
+		}
+
+		function getN (obj,ev){
+			var y=obj.offsetHeight/2+obj.getBoundingClientRect().top-ev.clientY;
+			var x=obj.offsetWidth/2+obj.getBoundingClientRect().left-ev.clientX;
+			var n=Math.round((Math.atan2(y,x)*180/Math.PI+180)/45)%8;
+			return n;	
+		}
+	}
+	/*皮肤切换*/
+	(function(){
+		var Row=5;
+		var Col=8;
+		var W=document.documentElement.clientWidth;
+		var H=document.documentElement.clientHeight;
+		var width=W/Col;
+		var height=H/Row;
+		var bgBox=document.getElementById('bgBox');
+		var aSpan=[];
+		for (var r=0; r<Row; r++)
+		{
+			for (var c=0; c<Col; c++)
 			{
-				if(arr[3])
-				{
-					setTimeout(more,500);
-				}
-				arr[3]=false;
+				var oSpan=document.createElement('span');
+				oSpan.style.position='absolute';
+				oSpan.style.width=width+'px';
+				oSpan.style.height=height+'px';
+				var left=c*width;
+				var top=r*height;
+				
+				oSpan.style.left=left+'px';
+				oSpan.style.top=top+'px';
+				oSpan.style.backgroundSize=('100%*'+Col)+' '+('100%*'+Row);
+				oSpan.style.backgroundPosition='-'+left+'px -'+top+'px';
+				bgBox.appendChild(oSpan);
+				aSpan.push(oSpan);
 			}
-		},100);
+		}
+		var aPath=['#00BFFF','#AB82FF'];
+		var oNav=document.getElementById('fp-nav');
+		var e=0;
+		window.o=true;
+		oNav.onclick=function(){
+			if(window.o)
+			{window.o=false;
+				bgNext(e)	
+			}
+			e++;
+			if(e==aPath.length)
+			{
+				e=0;
+			}
+		};
+		var aNav=oNav.getElementsByTagName('a');
+		function bgNext(now)
+		{
+			for (var i=0; i<aSpan.length; i++)
+			{
+				aSpan[i].style.opacity=0;
+				aSpan[i].style.background=aPath[now];
+			}
+			var n=0; // 第几个
+			var timer=setInterval(function (){
+				(function (index){
+					move(aSpan[n], {opacity:1}, {
+						duration:300,
+						complete:function (){
+							if (index == aSpan.length-1)
+							{
+								bgBox.style.background=aPath[now];
+							}
+						}
+					});
+				})(n);	
+				n++;
+				if (n == aSpan.length)
+				{
+					clearInterval(timer);
+					window.o=true;
+				}
+			}, 30);
+		}
 	})();
 	
 	
+	/*第四屏-转盘效果*/
+	function more()
+	{
+		var oBtn=document.getElementById('Message');
+		var oContact=document.getElementById('contact');
+		var oContent=document.getElementById('content');
+		var aSpan=oContent.children;
+		var R=oContent.offsetWidth/2;
+		var n=360/aSpan.length;
+		var timer=null;
+		move(oContent,{opacity:1},{duration:800,complete:function(){
+			for(var i=0;i<aSpan.length;i++){
+				(function(index){
+					var left=R+R*Math.sin(index*n*Math.PI/180);
+					var top=R-R*Math.cos(index*n*Math.PI/180);
+					move(aSpan[index],{left:left,top:top},{easing:Tween.Elastic.easeInOut,duration:1000,complete:function(){
+						if(index==aSpan.length-1){
+							oContent.a=0;
+							clearInterval(timer);
+							timer=setInterval(function(){
+								oContent.a++;
+								for(var i=0;i<aSpan.length;i++){
+									var left=R+R*Math.sin((i*n+oContent.a)*Math.PI/180);
+									var top=R-R*Math.cos((i*n+oContent.a)*Math.PI/180);
+									aSpan[i].style.left=left+'px';
+									aSpan[i].style.top=top+'px';
+								}	
+							},30);	
+						}	
+					}});	
+				})(i);						
+			}	
+		}});	
+		oContent.onmouseover=function(){
+			clearInterval(timer);	
+		};
+		oContent.onmouseout=function(){
+			clearInterval(timer);
+			timer=setInterval(function(){
+				oContent.a++;
+				for(var i=0;i<aSpan.length;i++){
+					var left=R+R*Math.sin((i*n+oContent.a)*Math.PI/180);
+					var top=R-R*Math.cos((i*n+oContent.a)*Math.PI/180);
+					aSpan[i].style.left=left+'px';
+					aSpan[i].style.top=top+'px';
+				}	
+			},30);	
+		};	
+	}
 	
-})
+	
+});
 
 
 

@@ -3,14 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>郝佳的个人主页</title>
+
 <link rel="stylesheet" href="css/jquery.fullPage.css">
 <link rel="stylesheet" href="css/base.css" /> 
 <link rel="stylesheet" href="css/index.css" /> 
-<script src="js/common.js"></script>
-<script src="js/ajax.js"></script>
-<script src="js/index.js"></script>
+
 <script src="js/jquery-1.8.3.min.js"></script>
 <script src="js/jquery.fullPage.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/index.js"></script>
+
 </head>
 
 <body>
@@ -19,25 +21,52 @@
 	<!--固定顶边栏-->
 	<div class="sidebar_top_bg"></div>
 	<div class="sidebar_top clearfix">
-		<!--天气-->
 		<div class="weather">
 			<span>实时天气 :</span>
 			<a href="javascript:;" id="weather_s"></a>
 			<ul id="weather_b">
 			</ul>
 		</div>
-		<h1>holly_zone</h1>
-		<!--新闻-->
+		<h1 id="h1">holly_zone</h1>
 		<p id="news"></p>
 	</div>
-	
 	<!--顶边栏结束-->
 	
+	<!--固定侧边栏-->
+    <div id="fp-nav">
+		<ul>
+			<li>
+				<a href="#1">
+					<span>我的首页</span>
+				</a>
+			</li>
+			<li>
+				<a href="#2">
+					<span>我的特效</span>
+				</a>
+			</li>
+			<li>
+				<a href="#3">
+					<span>我的项目</span>
+				</a>
+			</li>
+			<li>
+				<a href="#4">
+					<span>我的移动端</span>
+				</a>
+			</li>
+			<li>
+				<a href="#5">
+					<span>联系我</span>
+				</a>
+			</li>
+		</ul>
+    </div>
+	<!--侧边栏结束-->
  	
-    <!--侧边导航结束-->
-	
+	<!--页面主体-->
 	<div id="section_wrap">
-		<!--首页-->
+		<!--第一屏-->
 		<div class="paper section">
 			<div class="home_content box">
 				<div class="home_head">
@@ -54,8 +83,9 @@
 				</div>
 			</div>
 		</div>
-		 <!--首页结束-->
-		 <!--首页-->
+		 <!--第一屏结束-->
+		 
+		 <!--第二屏-->
 		<div class="paper section">
 			<div class="works-box box clearfix">
 				<ul class="works fl" id="works">
@@ -182,11 +212,12 @@
 				</div>
 			</div>
 		</div>
-		 <!--首页结束-->
-		 <!--首页-->
+		 <!--第二屏结束-->
+		 
+		 <!--第三屏-->
 		<div class="paper section">
 			<div class="products box">
-				<h2>作品集<br/><span>production</span></h2>
+				<br/><br/><br/><br/>
 				<div id="products_con" class="products_con">
 					<ul>
 						<li>
@@ -224,8 +255,9 @@
 				<div id="btn" class="btn">换位置</div>
 			</div>
 		</div>
-		 <!--首页结束-->
-		 <!--首页-->
+		 <!--第三屏结束-->
+		 
+		 <!--第四屏-->
 		<div class="paper section">
 			<div class="box" style="position:relative;">
 				<div id="content">
@@ -237,11 +269,12 @@
 				</div>
 			</div>
 		</div>
-		 <!--首页结束-->
-		 <!--首页-->
+		 <!--第四屏结束-->
+		 
+		 <!--第五屏-->
 		<div class="paper section">
 			<div class="contact box">
-				<div class="fr">
+				<div id="person_img">
 					<span></span>
 					<ul class="clearfix icon">
 						<li class="fl">
@@ -259,7 +292,7 @@
 					</ul>
 				</div>
 				
-				<div class="fl number" id="number">
+				<div class="number" id="person_info">
 					<h2 class="link">CONTACT ME</h2>
 					<p class="list">姓名：郝佳</p>
 					<p class="list">手机：17744523417</p>
@@ -268,15 +301,14 @@
 					<p class="list">地址：北京市昌平区回龙观</p>
 					<p class="list">感谢访问本网站，您的到来让我感到很荣幸！</p>
 				</div>
-				
 				<div class="Message">
 					<a href="../bees/bees.html" target="_blank">GAME</a>
 				</div>
 			</div>
 		</div>
-		<!--首页结束-->
+		<!--第五屏结束-->
 		
-		<!--底部 B-->
+		<!--footer-->
 		<div class="section" id="section-footer">
 			<div id="footer-text">
 				<div class="footer">
@@ -291,40 +323,10 @@
 				</div>
 			</div>
 		</div>
-		<!--底部 E-->
+		<!--footer结束-->
+		
 	</div>
-	<!--固定侧边栏-->
-    <div id="fp-nav">
-		<ul>
-			<li>
-				<a href="#1">
-					<span>HOME</span>
-				</a>
-			</li>
-			<li>
-				<a href="#2">
-					<span>SHOW</span>
-				</a>
-			</li>
-			<li>
-				<a href="#3">
-					<span>WEB</span>
-				</a>
-			</li>
-			<li>
-				<a href="#4">
-					<span>MOBILE</span>
-				</a>
-			</li>
-			<li>
-				<a href="#5">
-					<span>CONTACT</span>
-				</a>
-			</li>
-		</ul>
-    </div>
-
-	
+	<!--主体结束-->	
 	
 </body>
 </html>
