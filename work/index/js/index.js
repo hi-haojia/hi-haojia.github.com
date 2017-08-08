@@ -1,5 +1,8 @@
 // JavaScript Document
 ready(function(){
+	//for(i=0, sum=0; i<10; ++i, sum+=i){ 
+	//}
+	//alert(sum);
 	
 	/*全屏滚动*/
 	$('#section_wrap').fullpage({
