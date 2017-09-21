@@ -1,1 +1,37 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><title>我们开始淘车猫了</title><link href=/static/css/app.fe6ec795d5b203fa7641fc662b8dd752.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=/static/js/manifest.ebeaf34d0d9c6ae9b809.js></script><script type=text/javascript src=/static/js/vendor.41210a9ee33d631abb14.js></script><script type=text/javascript src=/static/js/app.0fe7c312f5659dfde7a9.js></script></body></html>
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>欢迎来到holly_zone!</title>
+<style>
+body{ background:pink; height:100%; width:100%; overflow:hidden; margin:0; }
+embed{ width:1024px; height:590px; display:block; margin:30px auto; }
+p{width:0;line-height:30px;position:absolute;top:70px;left:500px;background:#c36; color:white;font-size:40px;padding:10px;border-radius:20px;opacity:0;white-space:nowrap; cursor:pointer;}
+#bg{width:100%;height:100%;position:absolute;z-index:1; cursor:pointer;}
+</style>
+ 
+<script src="common.js"></script>
+<script>
+ready(function(){
+	var oEmbed=document.getElementsByTagName('embed')[0];
+	setTimeout(function(){
+		window.location='work/index/index.html';
+	},13500);
+	var oEnter=document.getElementById('enter');
+	move(oEnter,{opacity:1,width:260});
+	setTimeout(function(){
+		move(oEnter,{opacity:0});
+	},12500);
+	bg.onclick=function(){
+		window.location='work/index/index.html';
+	}
+})
+</script>
+
+</head>
+<body>
+	<div id="bg"></div>
+	<embed  name="plugin" src="flash/danche.swf" type="application/x-shockwave-flash" ">
+	<p id="enter">enter my zone</p>
+</body>
+</html>
